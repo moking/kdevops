@@ -53,6 +53,7 @@ linux-help-menu:
 	@echo "Linux git kernel development options"
 	@echo "linux              - Git clones a linux git tree, build Linux, installs and reboots into it"
 	@echo "linux-deploy       - Builds, installs, updates GRUB and reboots - useful for rapid development"
+	@echo "linux-no-clone     - Same as 'linux' but without clone git tree, compared to 'linux-deploy', it will create the data path on the guest and mount linux git directory"
 	@echo "linux-install      - Only builds and installs Linux"
 	@echo "linux-clone        - Only clones Linux"
 	@echo "linux-grub-setup   - Ensures the appropriate target kernel is set to boot"
@@ -72,6 +73,13 @@ linux: $(KDEVOPS_NODES)
 		--extra-vars="$(BOOTLINUX_ARGS)"
 	$(Q)ansible-playbook $(ANSIBLE_VERBOSE) -i \
 		$(KDEVOPS_HOSTFILE) $(KDEVOPS_PLAYBOOKS_DIR)/bootlinux.yml \
+		--extra-vars="$(BOOTLINUX_ARGS)" $(LIMIT_HOSTS)
+
+PHONY += linux-no-clone
+linux-no-clone: $(KDEVOPS_NODES)
+	$(Q)ansible-playbook $(ANSIBLE_VERBOSE) -i \
+		$(KDEVOPS_HOSTFILE) $(KDEVOPS_PLAYBOOKS_DIR)/bootlinux.yml \
+		--skip-tags git,clone \
 		--extra-vars="$(BOOTLINUX_ARGS)" $(LIMIT_HOSTS)
 
 PHONY += linux-deploy
