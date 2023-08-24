@@ -266,6 +266,14 @@ endif # !QEMU_BUILD
 
 if QEMU_BUILD
 
+config QEMU_BUILD_WITH_DEBUG_ENABLED
+	bool "Build qemu with debug information enabled"
+	default n
+	help
+	  Enable this will add "--enable-debug" option when building qemu. With the
+	  option selected, users can use debug tools (like gdb) to debug qemu code,
+	  helping qemu code debugging.
+
 choice
 	prompt "QEMU git URL to use"
 	default QEMU_BUILD_JIC23
